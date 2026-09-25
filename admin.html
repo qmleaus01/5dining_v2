@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>5Dining · Quản trị</title>
+<style>
+:root{--deep:#1c120d;--earth:#7a3e1d;--gold:#d9a441;--gold-2:#f3d08a;--red:#b3261e;--jade:#2f6b4f;--hue:#6b3f7a;--sun:#c7621f;--paper:#f5ead3;--cream:#fbf6ec;--ink:#2a1c15;--muted:#7b6a5c;--line:#e6d6bc;
+--serif:"Noto Serif","Times New Roman",Georgia,serif;--sans:"Segoe UI",Roboto,Arial,sans-serif;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{font-family:var(--sans);background:var(--cream);color:var(--ink);line-height:1.5;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+a{color:inherit}
+.wrap{width:min(1180px,100% - 32px);margin:auto}
+header{background:var(--deep);color:#fff;position:sticky;top:0;z-index:20;box-shadow:0 10px 30px -20px #000}
+.hbar{display:flex;align-items:center;gap:16px;padding:14px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
+.brand i{width:38px;height:38px;border-radius:50%;background:var(--red);border:2px solid var(--gold);display:grid;place-items:center;font:700 20px var(--serif);color:var(--gold-2);font-style:normal}
+.brand b{font-family:var(--serif);font-size:1.2rem;display:block;line-height:1}
+.brand small{font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-2)}
+.tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:12px}
+.tab{padding:9px 18px;border-radius:999px;color:rgba(255,255,255,.75);font-weight:700;white-space:nowrap;transition:background .3s,color .3s}
+.tab:hover{color:#fff}
+.tab.on{background:var(--gold);color:var(--deep)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:700;transition:transform .3s var(--ease),background .3s,opacity .3s;white-space:nowrap}
+.btn:hover{transform:translateY(-2px)}
+.btn:disabled{opacity:.5;transform:none;cursor:wait}
+.btn-gold{background:linear-gradient(135deg,var(--gold-2),var(--gold));color:var(--deep)}
+.btn-red{background:var(--red);color:#fff}
+.btn-dark{background:var(--deep);color:var(--gold-2)}
+.btn-line{border:1.5px solid var(--line);background:#fff;color:var(--earth)}
+.btn-ghost{border:1.5px solid rgba(243,208,138,.45);color:var(--gold-2)}
+.btn.sm{padding:6px 12px;font-size:.82rem}
+main{padding:28px 0 80px}
+h1{font-family:var(--serif);font-size:1.8rem;color:var(--deep)}
+h2{font-family:var(--serif);font-size:1.3rem;color:var(--deep);margin:26px 0 10px}
+.muted{color:var(--muted);font-size:.9rem}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0 18px}
+.toolbar .grow{flex:1}
+input[type=text],input[type=url],input[type=password],input[type=email],input[type=tel],input[type=number],input[type=date],input[type=time],select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;transition:border-color .3s,box-shadow .3s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(217,164,65,.2)}
+textarea{resize:vertical;min-height:70px}
+label.f{display:grid;gap:5px;font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--earth)}
+label.f input,label.f select,label.f textarea{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink);font-size:.95rem}
+label.f span{font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.stack{display:grid;gap:14px}
+/* login */
+.login{max-width:420px;margin:60px auto;text-align:center}
+.login .panel{display:grid;gap:14px;text-align:left;padding:30px}
+.login h1{margin-bottom:6px}
+.chk{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+/* bookings */
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 16px;min-width:110px}
+.stat b{display:block;font-family:var(--serif);font-size:1.5rem;color:var(--red);line-height:1.1}
+.stat span{font-size:.78rem;color:var(--muted)}
+.bk{display:grid;grid-template-columns:90px 1.3fr 1fr 1.2fr 170px;gap:14px;align-items:start;background:#fff;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.bk[data-st="Đã xác nhận"]{border-left-color:var(--jade)}
+.bk[data-st="Đã đến"]{border-left-color:#3b6fb3;opacity:.8}
+.bk[data-st="Hủy"]{border-left-color:#999;opacity:.55}
+.bk .t{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--deep);line-height:1}
+.bk .t small{display:block;font-family:var(--sans);font-size:.72rem;color:var(--muted);font-weight:400;margin-top:4px}
+.bk b{display:block}
+.bk .s{font-size:.84rem;color:var(--muted)}
+.bk a{color:var(--red);font-weight:700;text-decoration:none}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--paper);color:var(--earth);margin:2px 4px 0 0}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+/* menu */
+.mrow{display:grid;grid-template-columns:64px 1fr 110px 120px auto;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:8px;transition:opacity .3s}
+.mrow.off{opacity:.5}
+.thumb{width:64px;height:48px;border-radius:10px;object-fit:cover;background:var(--paper);display:block}
+.mrow b{font-family:var(--serif);font-size:1.05rem;display:block;line-height:1.2}
+.mrow small{color:var(--muted)}
+.reg{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px;color:#fff;justify-self:start}
+.price{font-family:var(--serif);font-weight:700;color:var(--red)}
+.acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.ib{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;color:var(--earth);font-weight:700}
+.ib:hover{border-color:var(--earth)}
+.switch{position:relative;width:42px;height:24px;border-radius:999px;background:#ccc;transition:background .3s;flex:none}
+.switch::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .3s var(--ease)}
+.switch.on{background:var(--jade)}
+.switch.on::after{transform:translateX(18px)}
+.del.arm{background:var(--red);color:#fff;border-color:var(--red)}
+.banner{background:#fff6e5;border:1.5px dashed var(--gold);border-radius:14px;padding:14px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.banner p{flex:1;min-width:240px;font-size:.9rem}
+/* modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(20,10,6,.6);display:grid;place-items:center;padding:16px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.modal.open{opacity:1;visibility:visible}
+.mcard{width:min(860px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--cream);border-radius:20px;padding:24px;transform:translateY(30px) scale(.97);transition:transform .45s var(--ease)}
+.modal.open .mcard{transform:none}
+.mhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.imgbox{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+.imgbox img{width:200px;height:150px;object-fit:cover;border-radius:10px;background:var(--paper);display:block}
+.mfoot{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;position:sticky;bottom:-24px;background:var(--cream);padding:12px 0}
+/* images */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line);transition:box-shadow .3s,transform .3s var(--ease)}
+.card.drag{transform:scale(1.02);box-shadow:0 0 0 3px var(--gold)}
+.pic{position:relative;aspect-ratio:4/3;background:var(--paper);cursor:pointer}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.pic .tag{position:absolute;left:10px;top:10px;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:999px;background:rgba(28,18,13,.75);color:var(--gold-2)}
+.pic .tag.own{background:var(--jade);color:#fff}
+.pic .hint{position:absolute;inset:0;display:grid;place-items:center;background:rgba(28,18,13,.55);color:#fff;font-weight:700;opacity:0;transition:opacity .3s}
+.pic:hover .hint,.card.drag .hint{opacity:1}
+.card .body{padding:12px 14px}
+.card h3{font-family:var(--serif);font-size:1.02rem}
+.card .row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.saving{position:relative;pointer-events:none}
+.saving::after{content:"Đang lưu…";position:absolute;inset:0;display:grid;place-items:center;background:rgba(255,255,255,.75);font-weight:700;border-radius:inherit;z-index:3}
+/* faq */
+.faqi{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;margin-bottom:10px}
+.faqi .top{display:flex;justify-content:space-between;align-items:center}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,calc(100% + 60px));background:var(--jade);color:#fff;padding:12px 22px;border-radius:999px;font-weight:600;transition:transform .5s var(--ease);z-index:99;max-width:calc(100% - 32px);text-align:center}
+.toast.show{transform:translate(-50%,0)}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-3px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (max-width:860px){
+  .bk{grid-template-columns:80px 1fr;}
+  .bk > :nth-child(n+3){grid-column:2}
+  .mrow{grid-template-columns:56px 1fr auto}
+  .mrow .reg,.mrow .price{display:none}
+  .g2,.g3,.imgbox{grid-template-columns:1fr}
+  .imgbox img{width:100%;height:auto;aspect-ratio:4/3}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="hbar">
+      <div class="brand"><i>5</i><div><b>5Dining</b><small>Trang quản trị</small></div></div>
+      <a class="btn btn-ghost sm" href="index.html" target="_blank" rel="noopener">Xem website ↗</a>
+      <button class="btn btn-ghost sm" data-act="logout" id="logoutBtn" hidden>Đăng xuất</button>
+    </div>
+    <nav class="tabs" id="tabs" hidden>
+      <button class="tab on" data-act="tab" data-t="bookings">📋 Đơn đặt bàn</button>
+      <button class="tab" data-act="tab" data-t="menu">🍜 Thực đơn</button>
+      <button class="tab" data-act="tab" data-t="images">🖼 Ảnh</button>
+      <button class="tab" data-act="tab" data-t="info">🏮 Thông tin nhà hàng</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- LOGIN -->
+  <section class="login" id="loginView">
+    <form class="panel" id="loginForm">
+      <div><h1>Đăng nhập quản trị</h1><p class="muted">Dùng mật khẩu ADMIN_PASS trong Google Apps Script.</p></div>
+      <label class="f" id="apiWrap" hidden>URL Web App<span>Dạng https://script.google.com/macros/s/…/exec</span><input id="apiIn" type="url" placeholder="https://script.google.com/macros/s/…/exec"></label>
+      <label class="f">Mật khẩu<input id="passIn" type="password" required autocomplete="current-password"></label>
+      <label class="chk"><input type="checkbox" id="remember"> Ghi nhớ trên máy này</label>
+      <button class="btn btn-red" id="loginBtn">Đăng nhập</button>
+    </form>
+  </section>
+
+  <!-- BOOKINGS -->
+  <section id="v-bookings" hidden>
+    <h1>Đơn đặt bàn</h1>
+    <div class="toolbar">
+      <input type="date" id="bkDate" style="max-width:180px">
+      <button class="btn btn-line sm" data-act="bkday" data-d="0">Hôm nay</button>
+      <button class="btn btn-line sm" data-act="bkday" data-d="1">Ngày mai</button>
+      <button class="btn btn-line sm" data-act="bkweek">7 ngày tới</button>
+      <span class="grow"></span>
+      <select id="bkFilter" style="max-width:180px"><option value="">Tất cả trạng thái</option><option>Mới</option><option>Đã xác nhận</option><option>Đã đến</option><option>Hủy</option></select>
+      <button class="btn btn-dark sm" data-act="bkload">↻ Tải lại</button>
+    </div>
+    <div class="stats" id="bkStats"></div>
+    <div id="bkList"></div>
+  </section>
+
+  <!-- MENU -->
+  <section id="v-menu" hidden>
+    <h1>Thực đơn</h1>
+    <div id="menuBanner"></div>
+    <div class="toolbar">
+      <select id="mFilter" style="max-width:200px"><option value="">Tất cả miền</option><option value="bac">Miền Bắc</option><option value="trung">Miền Trung</option><option value="nam">Miền Nam</option></select>
+      <span class="grow muted">Bật/tắt công tắc để hiện hoặc ẩn món trên website. Mũi tên để đổi thứ tự.</span>
+      <button class="btn btn-red" data-act="madd">+ Thêm món</button>
+    </div>
+    <div id="menuList"></div>
+  </section>
+
+  <!-- IMAGES -->
+  <section id="v-images" hidden>
+    <h1>Ảnh</h1>
+    <p class="muted">Bấm vào ảnh hoặc kéo thả ảnh vào để thay. Ảnh tự được cắt khung 4:3, thu nhỏ còn 1200×900 và hiện ngay trên website.</p>
+    <h2>Món ăn</h2><div class="grid" id="gDish"></div>
+    <h2>Ảnh bìa &amp; không gian nhà hàng</h2><div class="grid" id="gHall"></div>
+    <h2>Ảnh địa danh (nền khi khách mở chi tiết món)</h2><div class="grid" id="gLand"></div>
+  </section>
+
+  <!-- INFO -->
+  <section id="v-info" hidden>
+    <h1>Thông tin nhà hàng</h1>
+    <div id="infoBanner"></div>
+    <form id="infoForm" class="stack" style="margin-top:16px">
+      <div class="panel stack">
+        <div class="g2">
+          <label class="f">Địa chỉ (tiếng Việt)<input type="text" name="addr_vi" required></label>
+          <label class="f">Địa chỉ (English)<input type="text" name="addr_en"></label>
+        </div>
+        <div class="g2">
+          <label class="f">Hotline<input type="tel" name="phone" required></label>
+          <label class="f">Email<input type="email" name="email"></label>
+        </div>
+        <div class="g3">
+          <label class="f">Giờ mở cửa<input type="time" name="open" required></label>
+          <label class="f">Giờ đóng cửa<input type="time" name="close" required></label>
+          <label class="f">Nhận khách cuối<span>khung giờ đặt bàn cuối</span><input type="time" name="last" required></label>
+        </div>
+        <div class="g2">
+          <label class="f">Vị trí trên Google Maps<span>Tên hoặc địa chỉ để hiển thị bản đồ</span><input type="text" name="mapq"></label>
+          <label class="f">Instagram<span>Link hoặc @tên tài khoản — để trống sẽ ẩn</span><input type="text" name="insta" placeholder="@5dining"></label>
+        </div>
+      </div>
+      <h2>Câu hỏi thường gặp <small style="font-weight:400;font-size:.8rem;color:#857a6f">(tạm ẩn trên website)</small></h2>
+      <div id="faqEd"></div>
+      <div><button type="button" class="btn btn-line" data-act="faqadd">+ Thêm câu hỏi</button></div>
+      <div class="mfoot" style="justify-content:flex-start;bottom:0"><button class="btn btn-red" id="infoSave">Lưu thông tin</button></div>
+    </form>
+  </section>
+</main>
+
+<!-- DISH EDITOR -->
+<div class="modal" id="dishModal"><form class="mcard" id="dishForm">
+  <div class="mhead"><h1 id="dTitle">Sửa món</h1><button type="button" class="btn btn-line sm" data-act="mclose">Đóng ✕</button></div>
+  <div class="stack">
+    <div class="imgbox"><img id="dImg" alt=""><div><b>Ảnh món</b><p class="muted" style="margin:4px 0 10px">Ảnh được tải lên ngay khi chọn.</p><button type="button" class="btn btn-gold sm" data-act="dimg">Chọn ảnh…</button></div></div>
+    <div class="g2">
+      <label class="f">Tên món (tiếng Việt)<input type="text" name="name" required></label>
+      <label class="f">Tên món (English)<input type="text" name="en"></label>
+    </div>
+    <div class="g3">
+      <label class="f">Miền<select name="r"><option value="bac">Miền Bắc</option><option value="trung">Miền Trung</option><option value="nam">Miền Nam</option></select></label>
+      <label class="f">Ảnh nền vùng đất<select name="land"><option value="hanoi">Hà Nội</option><option value="haiphong">Hải Phòng</option><option value="hue">Huế</option><option value="hoian">Hội An / Xứ Quảng</option><option value="saigon">Sài Gòn</option><option value="mekong">Miền Tây</option></select></label>
+      <label class="f">Giá (VND)<input type="number" name="price" min="0" step="1000" required></label>
+    </div>
+    <div class="g2">
+      <label class="f">Xuất xứ (VI)<span>VD: Hà Nội</span><input type="text" name="prov_vi"></label>
+      <label class="f">Xuất xứ (EN)<input type="text" name="prov_en"></label>
+    </div>
+    <div class="g2">
+      <label class="f">Mô tả ngắn (VI)<textarea name="desc_vi" rows="2"></textarea></label>
+      <label class="f">Mô tả ngắn (EN)<textarea name="desc_en" rows="2"></textarea></label>
+    </div>
+    <div class="g2">
+      <label class="f">Nguyên liệu (VI)<span>Mỗi dòng một nguyên liệu</span><textarea name="ing_vi" rows="5"></textarea></label>
+      <label class="f">Nguyên liệu (EN)<span>One per line</span><textarea name="ing_en" rows="5"></textarea></label>
+    </div>
+    <div class="g2">
+      <label class="f">Nguồn gốc (VI)<textarea name="origin_vi" rows="3"></textarea></label>
+      <label class="f">Nguồn gốc (EN)<textarea name="origin_en" rows="3"></textarea></label>
+    </div>
+    <div class="g3">
+      <label class="f">Nhãn (VI)<span>VD: Signature, Món mới</span><input type="text" name="tag_vi"></label>
+      <label class="f">Nhãn (EN)<input type="text" name="tag_en"></label>
+      <label class="chk" style="align-self:end;padding-bottom:10px"><input type="checkbox" name="show"> Hiện trên website</label>
+    </div>
+  </div>
+  <div class="mfoot"><button type="button" class="btn btn-line" data-act="mclose">Hủy</button><button class="btn btn-red" id="dSave">Lưu món</button></div>
+</form></div>
+
+<input type="file" id="file" accept="image/*" hidden>
+<div class="toast" id="toast"></div>
+<iframe id="defFrame" hidden title="defaults"></iframe>
+
+<script>
+(() => {
+'use strict';
+// Để trống: tự đọc API_URL trong index.html (cùng thư mục trên GitHub Pages).
+const API_URL_OVERRIDE = '';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = n => (+n || 0).toLocaleString('vi-VN') + '₫';
+const REGC = { bac: ['Miền Bắc', '#2f6b4f'], trung: ['Miền Trung', '#6b3f7a'], nam: ['Miền Nam', '#c7621f'] };
+const ERR = { wrong_pass: 'Sai mật khẩu', locked: 'Sai mật khẩu quá nhiều lần — thử lại sau 15 phút', not_found: 'Không tìm thấy đơn', bad_menu: 'Dữ liệu thực đơn không hợp lệ' };
+const FILES = { hero:'Bun-cha-hanoi.jpg', pho:'Phở bò (39425047901).jpg', buncha:'Bun-cha-hanoi.jpg', chaca:'Chả cá Lã Vọng.jpg', banhcuon:'Banh cuon.jpg', banhdacua:'Bánh đa cua Hải Phòng (27.2 (1).jpg', bunbohue:'Bun-Bo-Hue-from-Huong-Giang-2011.jpg', comhen:'Com Hen at Hue Vietnam.JPG', banhbeo:'Bánh bèo chén.jpg', miquang:'Mi Quang 1A Danang.jpg', caolau:'Cao lầu.jpg', comtam:'Special Broken Rice with Pork Chop, Shredded Pork Skin and Fried Egg - Thanh Ha (3015036072).jpg', goicuon:'Spring rolls with peanut sauce.jpg', hutieu:'Hu-Tieu-Kho-2008.jpg', cakho:'Cá kho tộ, cá hú.jpg', bokho:'Bo kho.jpg', caphesua:'Ca Phe Sua Da.jpg', 'l-hanoi':'Turtle Tower, Hoan Kiem Lake, Hanoi 4G4A7301.jpg', 'l-haiphong':'Haiphong Opera House.jpg', 'l-halong':'Ha Long Bay.jpg', 'l-hue':'Le Stupa Phuoc Duyen (Pagode Thien Mu) (4380068346).jpg', 'l-hoian':'Lanterns in Hoi An 4.jpg', 'l-hoian2':'Hội An, Ancient Town, 2020-01 CN-06.jpg', 'l-saigon':'Ben Thanh Market, 2023 (02).jpg', 'l-mekong':'Cho noi (Cai Rang, Can Tho).JPG', 'l-oldquarter':'Ha-noi-36-pho-phuong.jpg' };
+const HALLS = [['hero', 'Ảnh bìa trang chủ (Hero) — nên dùng ảnh món ăn ngang, sắc nét'], ['l-oldquarter', 'Không gian · ảnh lớn'], ['l-hoian', 'Không gian · ảnh nhỏ 1'], ['l-mekong', 'Không gian · ảnh nhỏ 2']];
+const LANDS = [['l-hanoi', 'Hà Nội – Tháp Rùa'], ['l-haiphong', 'Hải Phòng'], ['l-hue', 'Huế – chùa Thiên Mụ'], ['l-hoian2', 'Hội An – phố cổ'], ['l-saigon', 'Sài Gòn – chợ Bến Thành']];
+const PLACEHOLDER = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 3"><rect width="4" height="3" fill="#f5ead3"/><text x="2" y="1.8" font-size=".5" text-anchor="middle" fill="#b39a7a">Chưa có ảnh</text></svg>');
+const imgUrl = (k, w = 600) => IMAGES[k] ? `https://lh3.googleusercontent.com/d/${IMAGES[k]}=w${w}` : FILES[k] ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(FILES[k])}?width=${w}` : PLACEHOLDER;
+
+let API = '', PASS = '', MENU = [], INFO = {}, IMAGES = {}, DEF = null, BOOKINGS = [], editId = null, imgTarget = null, view = 'bookings', bkRange = null;
+const store = { get: k => { try { return sessionStorage.getItem(k) || localStorage.getItem(k) || ''; } catch (e) { return ''; } }, set: (k, v, keep) => { try { (keep ? localStorage : sessionStorage).setItem(k, v); } catch (e) {} }, del: k => { try { sessionStorage.removeItem(k); localStorage.removeItem(k); } catch (e) {} } };
+
+function toast(m, bad) { const t = $('#toast'); t.textContent = m; t.style.background = bad ? '#b3261e' : ''; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2800); }
+async function post(body) {
+  const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ ...body, pass: PASS }) });
+  const j = await r.json();
+  if (!j.ok) { if (j.error === 'wrong_pass' || j.error === 'locked') logout(true); throw new Error(ERR[j.error] || j.error || 'Lỗi không xác định'); }
+  return j;
+}
+async function busy(btn, fn) { const h = btn && btn.innerHTML; if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span>'; } try { return await fn(); } finally { if (btn) { btn.disabled = false; btn.innerHTML = h; } } }
+const iso = d => new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+const addDays = n => { const d = new Date(); d.setDate(d.getDate() + n); return iso(d); };
+
+/* ---------- defaults from index.html (same origin) ---------- */
+function loadDefaults() {
+  return new Promise(res => {
+    const f = $('#defFrame'); let done = false;
+    const finish = v => { if (!done) { done = true; res(v); } };
+    f.onload = () => { try { finish(f.contentWindow.__5D_DEFAULTS || null); } catch (e) { finish(null); } };
+    setTimeout(() => finish(null), 8000);
+    f.src = 'index.html';
+  });
+}
+async function findApi() {
+  if (API_URL_OVERRIDE) return API_URL_OVERRIDE;
+  try { const html = await (await fetch('index.html', { cache: 'no-store' })).text(); const m = html.match(/const API_URL = '([^']*)'/); if (m && m[1]) return m[1]; } catch (e) {}
+  return store.get('5d-admin-api');
+}
+
+/* ---------- auth ---------- */
+async function login(pass, remember, silent) {
+  PASS = pass;
+  try {
+    const j = await post({ action: 'getAdmin' });
+    MENU = j.menu || []; INFO = j.info || {}; IMAGES = j.images || {};
+    store.set('5d-admin-pass', pass, remember);
+    $('#loginView').hidden = true; $('#tabs').hidden = false; $('#logoutBtn').hidden = false;
+    if (!MENU.length || !Object.keys(INFO).length) DEF = DEF || await loadDefaults();
+    show(location.hash.slice(1) || 'bookings');
+    if (!silent) toast('Đăng nhập thành công');
+  } catch (e) { PASS = ''; if (!silent) toast(e.message === 'Failed to fetch' ? 'Không kết nối được Google Apps Script — kiểm tra URL Web App' : e.message, true); }
+}
+function logout(quiet) {
+  PASS = ''; store.del('5d-admin-pass');
+  $('#loginView').hidden = false; $('#tabs').hidden = true; $('#logoutBtn').hidden = true;
+  $$('main > section[id^="v-"]').forEach(s => s.hidden = true);
+  if (!quiet) toast('Đã đăng xuất');
+}
+function show(v) {
+  if (!['bookings', 'menu', 'images', 'info'].includes(v)) v = 'bookings';
+  view = v; history.replaceState(null, '', '#' + v);
+  $$('#tabs .tab').forEach(t => t.classList.toggle('on', t.dataset.t === v));
+  $$('main > section[id^="v-"]').forEach(s => s.hidden = s.id !== 'v-' + v);
+  if (v === 'bookings') loadBookings();
+  if (v === 'menu') renderMenu();
+  if (v === 'images') renderImages();
+  if (v === 'info') renderInfo();
+}
+
+/* ---------- bookings ---------- */
+async function loadBookings() {
+  const from = bkRange ? bkRange[0] : $('#bkDate').value, to = bkRange ? bkRange[1] : from;
+  $('#bkList').innerHTML = '<p class="empty"><span class="spin"></span> Đang tải…</p>';
+  try { const j = await post({ action: 'listBookings', from, to }); BOOKINGS = j.bookings || []; renderBookings(); }
+  catch (e) { $('#bkList').innerHTML = `<p class="empty">${esc(e.message)}</p>`; }
+}
+function renderBookings() {
+  const f = $('#bkFilter').value, list = BOOKINGS.filter(b => !f || b.status === f);
+  const act = BOOKINGS.filter(b => b.status !== 'Hủy');
+  const cnt = s => BOOKINGS.filter(b => b.status === s).length;
+  $('#bkStats').innerHTML = [[act.length, 'đơn (không tính hủy)'], [act.reduce((s, b) => s + (+b.guests || 0), 0), 'khách'], [cnt('Mới'), 'chờ xác nhận'], [cnt('Đã xác nhận'), 'đã xác nhận'], [fmt(act.reduce((s, b) => s + (+b.total || 0), 0)), 'món đặt trước']].map(([n, l]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join('');
+  if (!list.length) { $('#bkList').innerHTML = '<p class="empty">Không có đơn đặt bàn nào trong khoảng thời gian này.</p>'; return; }
+  $('#bkList').innerHTML = list.map(b => `<div class="bk" data-st="${esc(b.status)}" data-code="${esc(b.code)}">
+    <div class="t">${esc(b.time)}<small>${esc(b.date.split('-').reverse().join('/'))}</small></div>
+    <div><b>${esc(b.name)}</b><a href="tel:${esc(b.phone.replace(/[^\d+]/g, ''))}">${esc(b.phone)}</a>${b.email ? `<div class="s">${esc(b.email)}</div>` : ''}<div class="s">Mã ${esc(b.code)}</div></div>
+    <div><b>${esc(b.guests)} khách</b><div class="s">${b.table ? `Bàn ${esc(b.table)} · ${esc(b.area)}` : 'Nhà hàng xếp bàn'}</div>${b.occasion ? `<span class="pill">${esc(b.occasion)}</span>` : ''}</div>
+    <div class="s">${b.preorder ? `<b style="color:var(--ink)">Món đặt trước:</b> ${esc(b.preorder)}<br><b style="color:var(--red)">${fmt(b.total)}</b>` : 'Chưa đặt món trước'}${b.note ? `<br><b style="color:var(--ink)">Ghi chú:</b> ${esc(b.note)}` : ''}</div>
+    <div><select data-act="bkstatus">${['Mới', 'Đã xác nhận', 'Đã đến', 'Hủy'].map(s => `<option${s === b.status ? ' selected' : ''}>${s}</option>`).join('')}</select></div>
+  </div>`).join('');
+}
+
+/* ---------- menu ---------- */
+function menuOrDefault() { return MENU.length ? MENU : []; }
+function renderMenu() {
+  const usingDef = !MENU.length;
+  $('#menuBanner').innerHTML = usingDef ? `<div class="banner"><p><b>Thực đơn trên Google Sheet đang trống.</b> Website đang hiển thị thực đơn mặc định (${DEF ? DEF.menu.length : 16} món). Bấm nút bên cạnh để chép thực đơn này vào Google Sheet rồi chỉnh sửa.</p><button class="btn btn-red" data-act="minit" ${DEF ? '' : 'disabled title="Không đọc được index.html"'}>Nhập thực đơn mặc định</button></div>` : '';
+  const f = $('#mFilter').value, list = menuOrDefault();
+  if (!list.length) { $('#menuList').innerHTML = '<p class="empty">Chưa có món nào.</p>'; return; }
+  $('#menuList').innerHTML = list.map((m, i) => (!f || m.r === f) ? `<div class="mrow${m.show === false ? ' off' : ''}" data-id="${esc(m.id)}">
+    <img class="thumb" src="${imgUrl(m.id, 200)}" alt="" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
+    <div><b>${esc(m.name)}</b><small>${esc(m.en)}${m.tag && m.tag.vi ? ` · ${esc(m.tag.vi)}` : ''}</small></div>
+    <span class="reg" style="background:${(REGC[m.r] || REGC.bac)[1]}">${(REGC[m.r] || REGC.bac)[0]}</span>
+    <span class="price">${fmt(m.price)}</span>
+    <div class="acts"><button class="switch${m.show === false ? '' : ' on'}" data-act="mshow" title="Hiện/ẩn trên website" aria-label="Hiện/ẩn"></button>
+      <button class="ib" data-act="mup" ${i === 0 ? 'disabled' : ''} title="Lên">↑</button><button class="ib" data-act="mdown" ${i === list.length - 1 ? 'disabled' : ''} title="Xuống">↓</button>
+      <button class="btn btn-line sm" data-act="medit">Sửa</button><button class="ib del" data-act="mdel" title="Xóa">🗑</button></div>
+  </div>` : '').join('');
+}
+async function saveMenu(msg) {
+  await post({ action: 'saveMenu', menu: MENU });
+  toast(msg || 'Đã lưu — website đã cập nhật');
+}
+const slug = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase().replace(/[^a-z0-9]+/g, '').slice(0, 20) || 'mon';
+function openDish(id) {
+  const f = $('#dishForm'), m = MENU.find(x => x.id === id);
+  editId = id || null;
+  const d = m || { id: '', show: true, r: 'bac', land: 'hanoi', price: 50000, name: '', en: '', prov: {}, desc: {}, ing: { vi: [], en: [] }, origin: {}, tag: null };
+  $('#dTitle').textContent = m ? 'Sửa món' : 'Thêm món mới';
+  f.name.value = d.name; f.en.value = d.en; f.r.value = d.r; f.land.value = d.land; f.price.value = d.price;
+  f.prov_vi.value = d.prov.vi || ''; f.prov_en.value = d.prov.en || ''; f.desc_vi.value = d.desc.vi || ''; f.desc_en.value = d.desc.en || '';
+  f.ing_vi.value = (d.ing.vi || []).join('\n'); f.ing_en.value = (d.ing.en || []).join('\n'); f.origin_vi.value = d.origin.vi || ''; f.origin_en.value = d.origin.en || '';
+  f.tag_vi.value = (d.tag && d.tag.vi) || ''; f.tag_en.value = (d.tag && d.tag.en) || ''; f.show.checked = d.show !== false;
+  $('#dImg').src = m ? imgUrl(m.id) : PLACEHOLDER;
+  $('#dishModal').classList.add('open'); setTimeout(() => f.name.focus(), 100);
+}
+function readDish() {
+  const f = $('#dishForm'), lines = s => s.split('\n').map(x => x.trim()).filter(Boolean);
+  let id = editId;
+  if (!id) { id = slug(f.name.value); while (MENU.some(x => x.id === id)) id = slug(f.name.value) + Math.floor(Math.random() * 90 + 10); }
+  const tv = f.tag_vi.value.trim(), te = f.tag_en.value.trim();
+  return { id, show: f.show.checked, r: f.r.value, land: f.land.value, price: +f.price.value || 0, name: f.name.value.trim(), en: f.en.value.trim() || f.name.value.trim(),
+    prov: { vi: f.prov_vi.value.trim(), en: f.prov_en.value.trim() || f.prov_vi.value.trim() }, desc: { vi: f.desc_vi.value.trim(), en: f.desc_en.value.trim() || f.desc_vi.value.trim() },
+    ing: { vi: lines(f.ing_vi.value), en: lines(f.ing_en.value).length ? lines(f.ing_en.value) : lines(f.ing_vi.value) },
+    origin: { vi: f.origin_vi.value.trim(), en: f.origin_en.value.trim() || f.origin_vi.value.trim() }, tag: tv || te ? { vi: tv || te, en: te || tv } : null };
+}
+
+/* ---------- images ---------- */
+function imgCard(k, n) {
+  return `<article class="card" data-k="${esc(k)}"><div class="pic" data-act="choose"><img src="${imgUrl(k)}" alt="${esc(n)}" loading="lazy" onerror="this.src='${PLACEHOLDER}'"><span class="tag${IMAGES[k] ? ' own' : ''}">${IMAGES[k] ? 'Ảnh của bạn' : 'Ảnh mặc định'}</span><span class="hint">Bấm hoặc kéo thả ảnh để thay</span></div>
+  <div class="body"><h3>${esc(n)}</h3><div class="row"><button class="btn btn-gold sm" data-act="choose">Chọn ảnh</button>${IMAGES[k] ? '<button class="btn btn-line sm" data-act="ireset">Dùng lại ảnh gốc</button>' : ''}</div></div></article>`;
+}
+function renderImages() {
+  const dishes = MENU.length ? MENU : (DEF ? DEF.menu : []);
+  $('#gDish').innerHTML = dishes.map(m => imgCard(m.id, m.name)).join('') || '<p class="muted">Chưa có món.</p>';
+  $('#gHall').innerHTML = HALLS.map(([k, n]) => imgCard(k, n)).join('');
+  $('#gLand').innerHTML = LANDS.map(([k, n]) => imgCard(k, n)).join('');
+}
+function loadImg(file) { return new Promise((res, rej) => { const u = URL.createObjectURL(file), i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('Không đọc được ảnh')); i.src = u; }); }
+async function processImg(file) {
+  const img = await loadImg(file), W = 1200, H = 900, r = W / H;
+  let sw = img.naturalWidth, sh = img.naturalHeight, sx = 0, sy = 0;
+  if (sw / sh > r) { const nw = sh * r; sx = (sw - nw) / 2; sw = nw; } else { const nh = sw / r; sy = (sh - nh) / 2; sh = nh; }
+  const sc = Math.min(1, W / sw), cw = Math.round(sw * sc), ch = Math.round(sh * sc);
+  const c = document.createElement('canvas'); c.width = cw; c.height = ch;
+  const x = c.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
+  return c.toDataURL('image/jpeg', .85);
+}
+async function uploadImg(k, file, el) {
+  if (!file || !file.type.startsWith('image/')) return toast('Hãy chọn một file ảnh (jpg, png, webp…)', true);
+  el && el.classList.add('saving');
+  try {
+    const data = await processImg(file);
+    const j = await post({ action: 'uploadImage', key: k, data });
+    IMAGES[k] = j.id; toast('Đã cập nhật ảnh — website đã dùng ảnh mới');
+    if (view === 'images') renderImages();
+    if (editId === k || (!editId && $('#dishModal').classList.contains('open'))) $('#dImg').src = data;
+    if (view === 'menu') renderMenu();
+  } catch (e) { toast('Lỗi tải ảnh: ' + e.message, true); }
+  finally { el && el.classList.remove('saving'); }
+}
+
+/* ---------- info ---------- */
+function curInfo() { return Object.keys(INFO).length ? INFO : (DEF ? DEF.info : {}); }
+function renderInfo() {
+  const I = curInfo(), f = $('#infoForm');
+  $('#infoBanner').innerHTML = Object.keys(INFO).length ? '' : '<div class="banner"><p><b>Chưa lưu thông tin nào lên Google Sheet.</b> Dưới đây là thông tin website đang hiển thị — sửa rồi bấm “Lưu thông tin”.</p></div>';
+  f.addr_vi.value = (I.addr && I.addr.vi) || ''; f.addr_en.value = (I.addr && I.addr.en) || '';
+  f.phone.value = I.phone || ''; f.email.value = I.email || ''; f.open.value = I.open || '10:00'; f.close.value = I.close || '22:00'; f.last.value = I.last || '21:00'; f.mapq.value = I.mapq || ''; f.insta.value = I.insta || '';
+  renderFaq(I.faq || []);
+}
+function renderFaq(list) {
+  $('#faqEd').innerHTML = list.map((q, i) => `<div class="faqi" data-i="${i}"><div class="top"><b>Câu hỏi ${i + 1}</b><button type="button" class="btn btn-line sm" data-act="faqdel">Xóa</button></div>
+    <div class="g2"><label class="f">Câu hỏi (VI)<input type="text" data-k="qvi" value="${esc(q.q && q.q.vi)}"></label><label class="f">Question (EN)<input type="text" data-k="qen" value="${esc(q.q && q.q.en)}"></label></div>
+    <div class="g2"><label class="f">Trả lời (VI)<textarea data-k="avi" rows="2">${esc(q.a && q.a.vi)}</textarea></label><label class="f">Answer (EN)<textarea data-k="aen" rows="2">${esc(q.a && q.a.en)}</textarea></label></div></div>`).join('') || '<p class="muted">Chưa có câu hỏi nào.</p>';
+}
+function readFaq() {
+  return $$('#faqEd .faqi').map(el => { const g = k => $(`[data-k="${k}"]`, el).value.trim(); return { q: { vi: g('qvi'), en: g('qen') || g('qvi') }, a: { vi: g('avi'), en: g('aen') || g('avi') } }; }).filter(x => x.q.vi && x.a.vi);
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', async e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const act = el.dataset.act, row = el.closest('[data-id]'), id = row && row.dataset.id, card = el.closest('.card'), k = card && card.dataset.k;
+  if (el.tagName === 'SELECT') return;
+  switch (act) {
+    case 'tab': show(el.dataset.t); break;
+    case 'logout': logout(); break;
+    case 'bkday': bkRange = null; $('#bkDate').value = addDays(+el.dataset.d); loadBookings(); break;
+    case 'bkweek': bkRange = [addDays(0), addDays(6)]; loadBookings(); break;
+    case 'bkload': loadBookings(); break;
+    case 'minit': await busy(el, async () => { MENU = DEF.menu.map(m => ({ ...m, show: true })); await saveMenu('Đã nhập thực đơn mặc định vào Google Sheet'); renderMenu(); }).catch(err => { MENU = []; toast(err.message, true); }); break;
+    case 'madd': if (!MENU.length && DEF) return toast('Hãy bấm “Nhập thực đơn mặc định” trước', true); openDish(null); break;
+    case 'medit': if (!MENU.length) return toast('Hãy bấm “Nhập thực đơn mặc định” trước', true); openDish(id); break;
+    case 'mclose': $('#dishModal').classList.remove('open'); break;
+    case 'mshow': { if (!MENU.length) return toast('Hãy bấm “Nhập thực đơn mặc định” trước', true); const m = MENU.find(x => x.id === id); m.show = m.show === false; renderMenu(); await saveMenu(m.show ? `Đã hiện “${m.name}”` : `Đã ẩn “${m.name}”`).catch(err => toast(err.message, true)); break; }
+    case 'mup': case 'mdown': { if (!MENU.length) return; const i = MENU.findIndex(x => x.id === id), j = act === 'mup' ? i - 1 : i + 1; if (j < 0 || j >= MENU.length) return; [MENU[i], MENU[j]] = [MENU[j], MENU[i]]; renderMenu(); await saveMenu('Đã đổi thứ tự').catch(err => toast(err.message, true)); break; }
+    case 'mdel': {
+      if (!MENU.length) return;
+      if (!el.classList.contains('arm')) { el.classList.add('arm'); el.textContent = 'Xóa?'; setTimeout(() => { el.classList.remove('arm'); el.textContent = '🗑'; }, 3000); return; }
+      const m = MENU.find(x => x.id === id); MENU = MENU.filter(x => x.id !== id); renderMenu();
+      await saveMenu(`Đã xóa “${m.name}”`).catch(err => { MENU.push(m); renderMenu(); toast(err.message, true); }); break;
+    }
+    case 'dimg': {
+      const f = $('#dishForm'); if (!f.name.value.trim()) return toast('Nhập tên món trước khi chọn ảnh', true);
+      if (!editId) { const d = readDish(); editId = d.id; MENU.push(d); await saveMenu('Đã tạo món').catch(err => toast(err.message, true)); }
+      imgTarget = { k: editId, el: $('.imgbox') }; $('#file').value = ''; $('#file').click(); break;
+    }
+    case 'choose': imgTarget = { k, el: card }; $('#file').value = ''; $('#file').click(); break;
+    case 'ireset': card.classList.add('saving'); try { await post({ action: 'resetImage', key: k }); delete IMAGES[k]; renderImages(); toast('Đã dùng lại ảnh gốc'); } catch (err) { toast(err.message, true); } finally { card.classList.remove('saving'); } break;
+    case 'faqadd': { const l = readFaqRaw(); l.push({ q: { vi: '', en: '' }, a: { vi: '', en: '' } }); renderFaq(l); break; }
+    case 'faqdel': { const l = readFaqRaw(); l.splice(+el.closest('.faqi').dataset.i, 1); renderFaq(l); break; }
+  }
+});
+function readFaqRaw() { return $$('#faqEd .faqi').map(el => { const g = k => $(`[data-k="${k}"]`, el).value; return { q: { vi: g('qvi'), en: g('qen') }, a: { vi: g('avi'), en: g('aen') } }; }); }
+document.addEventListener('change', async e => {
+  if (e.target.matches('[data-act="bkstatus"]')) {
+    const code = e.target.closest('.bk').dataset.code, status = e.target.value, b = BOOKINGS.find(x => x.code === code), old = b.status;
+    b.status = status; renderBookings();
+    try { await post({ action: 'setBookingStatus', code, status }); toast(`Đơn ${code}: ${status}`); } catch (err) { b.status = old; renderBookings(); toast(err.message, true); }
+  }
+  if (e.target.id === 'bkDate') { bkRange = null; loadBookings(); }
+  if (e.target.id === 'bkFilter') renderBookings();
+  if (e.target.id === 'mFilter') renderMenu();
+  if (e.target.id === 'file' && imgTarget) uploadImg(imgTarget.k, e.target.files[0], imgTarget.el);
+});
+$('#dishForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const d = readDish(), i = MENU.findIndex(x => x.id === d.id), backup = MENU.slice();
+  if (i >= 0) MENU[i] = d; else MENU.push(d);
+  await busy($('#dSave'), async () => { await saveMenu(`Đã lưu “${d.name}”`); $('#dishModal').classList.remove('open'); renderMenu(); }).catch(err => { MENU = backup; toast(err.message, true); });
+});
+$('#infoForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = e.target, info = { addr: { vi: f.addr_vi.value.trim(), en: f.addr_en.value.trim() || f.addr_vi.value.trim() }, phone: f.phone.value.trim(), email: f.email.value.trim(),
+    open: f.open.value, close: f.close.value, last: f.last.value, mapq: f.mapq.value.trim() || f.addr_vi.value.trim(), insta: f.insta.value.trim(), faq: readFaq() };
+  await busy($('#infoSave'), async () => { await post({ action: 'saveInfo', info }); INFO = info; renderInfo(); toast('Đã lưu thông tin — website đã cập nhật'); }).catch(err => toast(err.message, true));
+});
+$('#loginForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!$('#apiWrap').hidden) { const u = $('#apiIn').value.trim(); if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(u)) return toast('URL Web App phải có dạng https://script.google.com/…/exec', true); API = u; store.set('5d-admin-api', u, true); }
+  await busy($('#loginBtn'), () => login($('#passIn').value, $('#remember').checked));
+});
+document.addEventListener('dragover', e => { const c = e.target.closest('.card,.imgbox'); if (c) { e.preventDefault(); c.classList.add('drag'); } });
+document.addEventListener('dragleave', e => { e.target.closest('.card,.imgbox')?.classList.remove('drag'); });
+document.addEventListener('drop', e => {
+  const c = e.target.closest('.card,.imgbox'); if (!c) return; e.preventDefault(); c.classList.remove('drag');
+  if (c.classList.contains('card')) uploadImg(c.dataset.k, e.dataTransfer.files[0], c);
+  else if (editId) uploadImg(editId, e.dataTransfer.files[0], c); else toast('Bấm “Chọn ảnh…” để tạo món trước', true);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#dishModal').classList.remove('open'); });
+setInterval(() => { if (PASS && view === 'bookings' && !document.hidden) loadBookings(); }, 120000);
+
+(async () => {
+  $('#bkDate').value = addDays(0);
+  API = await findApi();
+  if (!API) { $('#apiWrap').hidden = false; $('#apiIn').required = true; return; }
+  const p = store.get('5d-admin-pass'); if (p) { let keep = false; try { keep = !!localStorage.getItem('5d-admin-pass'); } catch (e) {} login(p, keep, true); }
+})();
+})();
+</script>
+</body>
+</html>
